@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>UX MCQ Engine</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="css/1-variables.css">
+    <link rel="stylesheet" href="css/2-base.css">
+    <link rel="stylesheet" href="css/3-components.css">
+    <link rel="stylesheet" href="css/4-responsive.css">
 </head>
 <body>
-
-    <!-- Target mount container -->
     <div id="mcq-app"></div>
 
-    <!-- Engine Script -->
-    <script src="mcq.js"></script>
-    <script>
+    <script type="module">
+        import { MCQEngine } from './js/main.js';
         document.addEventListener("DOMContentLoaded", () => {
             new MCQEngine("mcq-app");
         });
