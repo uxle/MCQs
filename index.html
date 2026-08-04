@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UX MCQ Engine</title>
-    <script src="mcq.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- Target mount container -->
     <div id="mcq-app"></div>
 
+    <!-- Engine Script -->
+    <script src="mcq.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             new MCQEngine("mcq-app");
