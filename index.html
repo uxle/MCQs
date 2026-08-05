@@ -2,9 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UX MCQ Engine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#eef0f4">
+    <meta name="description" content="A lightweight multiple-choice quiz engine for any subject — upload your own JSON question set or try the built-in sample test.">
+    <script>
+        (function () {
+            try {
+                var stored = localStorage.getItem('mcq-theme');
+                var theme = (stored === 'light' || stored === 'dark')
+                    ? stored
+                    : (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+                var meta = document.querySelector('meta[name="theme-color"]');
+                if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f1115' : '#eef0f4');
+            } catch (e) {}
+        })();
+    </script>
+    <title>MCQ Practice</title>
 
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/fontawesome.min.css" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/solid.min.css" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="css/1-variables.css">
     <link rel="stylesheet" href="css/2-base.css">
     <link rel="stylesheet" href="css/3-components.css">

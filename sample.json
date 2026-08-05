@@ -1,41 +1,50 @@
 {
-  "title": "UX Principles Sample Quiz",
-  "questions": [
-    {
-      "id": 1,
-      "question": "Which iOS interaction pattern best prevents accidental deletion of user data?",
-      "options": [
-        "A generic alert asking 'Are you sure?'",
-        "A destructive Action Sheet with explicit red confirmation text",
-        "Deleting immediately and showing a quick banner notification",
-        "Disabling deletion completely on mobile views"
-      ],
-      "correct": 1,
-      "rationale": "Nielsen's 'Error Prevention' heuristic recommends distinct, high-significance visual confirmation controls (like red Action Sheet buttons) for destructive actions to eliminate muscle-memory slips."
-    },
-    {
-      "id": 2,
-      "question": "According to Fitts's Law, why are mobile tab bars positioned at the bottom of the screen?",
-      "options": [
-        "They reduce screen contrast strain",
-        "The screen bottom acts as an infinite boundary within easy thumb reach",
-        "It leaves more space for large typography titles",
-        "It enforces Miller's Law chunking constraints"
-      ],
-      "correct": 1,
-      "rationale": "Fitts's Law states target acquisition time depends on distance and size. Placing interactive controls at the bottom screen edge minimizes thumb travel distance and maximizes target depth."
-    },
-    {
-      "id": 3,
-      "question": "What is the WCAG 2.1 Level AA minimum contrast ratio requirement for standard body text?",
-      "options": [
-        "3:1",
-        "4.5:1",
-        "7:1",
-        "2:1"
-      ],
-      "correct": 1,
-      "rationale": "WCAG Guideline 1.4.3 mandates a contrast ratio of at least 4.5:1 for normal body text to ensure readability for low-vision users."
-    }
-  ]
+    "title": "General Knowledge Sample",
+    "questions": [
+        {
+            "id": 1,
+            "question": "What gas do plants primarily absorb from the atmosphere for photosynthesis?",
+            "options": ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+            "correct": 1,
+            "category": "Science",
+            "rationale": "Plants use sunlight to convert carbon dioxide and water into glucose, releasing oxygen as a byproduct."
+        },
+        {
+            "id": 2,
+            "question": "What is the capital of Australia?",
+            "options": ["Sydney", "Melbourne", "Canberra", "Perth"],
+            "correct": 2,
+            "category": "Geography",
+            "rationale": "Canberra was purpose-built as the capital in 1913 as a compromise between rivals Sydney and Melbourne."
+        },
+        {
+            "id": 3,
+            "question": "In which year did World War II end?",
+            "options": ["1943", "1944", "1945", "1946"],
+            "correct": 2,
+            "category": "History",
+            "rationale": "The war ended in 1945 with Germany's surrender in May and Japan's surrender in September."
+        },
+        {
+            "id": 4,
+            "question": "What is the value of \u03c0 (pi), rounded to two decimal places?",
+            "options": ["3.12", "3.14", "3.16", "3.18"],
+            "correct": 1,
+            "category": "Math",
+            "rationale": "Pi is the ratio of a circle's circumference to its diameter, approximately 3.14159."
+        },
+        {
+            "id": 5,
+            "question": "What does 'HTTP' stand for?",
+            "options": [
+                "HyperText Transfer Protocol",
+                "High Transfer Text Protocol",
+                "HyperText Transmission Process",
+                "Home Tool Transfer Protocol"
+            ],
+            "correct": 0,
+            "category": "Technology",
+            "rationale": "HTTP is the protocol used for transmitting hypertext (web pages) across the internet."
+        }
+    ]
 }
