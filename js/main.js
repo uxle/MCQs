@@ -1,12 +1,18 @@
-import { defaultQuizData } from './config.js';
+import { sampleQuizData } from './config.js';
 import { QuizState } from './state.js';
-import { initUploader } from './uploader.js';
-import { renderDots } from './dots.js';
+import { initTheme } from './theme.js';
+import { renderHome } from './home.js';
+import { renderBuilder } from './builder.js';
+import { renderQuizView } from './quizview.js';
+import { renderProgress } from './progress.js';
 import { renderQuestion } from './question.js';
 import { renderOptions, applyOptionStyles } from './options.js';
 import { showRationale, hideRationale } from './rationale.js';
-import { renderResults } from './results.js';
-import { toggleNextButton } from './theme.js';
+import { renderResultsView, renderResults } from './results.js';
+import { renderReview } from './review.js';
+import { downloadResults } from './exporter.js';
+
+const APP_NAME = "MCQ Practice";
 
 export class MCQEngine {
     constructor(containerId) {
@@ -16,99 +22,144 @@ export class MCQEngine {
     }
 
     init() {
-        this.renderLayout();
-        this.bindElements();
-        initUploader(this.fileInput, (data) => this.loadQuiz(data));
-        this.loadQuiz(defaultQuizData);
+        this.renderShell();
+        this.homeBtn.addEventListener("click", () => this.showHome());
+        this.errorDismiss.addEventListener("click", () => this.hideError());
+        initTheme(this.themeToggle);
+
+        // Initial load shouldn't steal focus — it isn't a response to a user action.
+        this.showHome({ focus: false });
     }
 
-    renderLayout() {
+    renderShell() {
         this.container.innerHTML = `
-            <div class="mcq-container">
-                <div class="top-bar">
-                    <span class="step-count" id="step-label">Question 1</span>
-                    <label class="upload-btn-label" for="json-file-input">📂 Upload JSON</label>
-                    <input type="file" id="json-file-input" class="file-input" accept=".json">
+            <div class="quiz-card">
+                <div class="quiz-topline">
+                    <button type="button" class="icon-btn" id="home-btn" aria-label="Home">
+                        <i class="fa-solid fa-house" aria-hidden="true"></i>
+                    </button>
+                    <p class="quiz-eyebrow" id="quiz-eyebrow">${APP_NAME}</p>
+                    <button type="button" class="icon-btn" id="theme-toggle" aria-label="Switch to dark mode">
+                        <i class="fa-solid fa-moon" aria-hidden="true"></i>
+                    </button>
                 </div>
-                <div class="dots-indicator" id="dots-container"></div>
-                <div id="question-view">
-                    <div class="question-text" id="question-text"></div>
-                    <div class="options-stack" id="options-stack"></div>
-                    <div class="rationale-card" id="rationale-card">
-                        <div class="rationale-title">UX Principle</div>
-                        <div id="rationale-text"></div>
-                    </div>
-                    <div class="card-footer">
-                        <button class="next-btn" id="next-btn">Continue</button>
-                    </div>
+
+                <div class="error-banner" id="error-banner" hidden>
+                    <span id="error-text"></span>
+                    <button type="button" class="error-dismiss" id="error-dismiss" aria-label="Dismiss error">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
                 </div>
-                <div class="results-view" id="results-view" style="display:none;">
-                    <h2 style="font-size:1.4rem; font-weight:700;">Quiz Completed</h2>
-                    <p id="quiz-title-summary" style="color:var(--text-sub); font-size:0.85rem; margin-top:0.2rem;"></p>
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <div class="stat-value right" id="count-right">0</div>
-                            <div class="stat-label">Right ✓</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-value wrong" id="count-wrong">0</div>
-                            <div class="stat-label">Wrong ✕</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-value total" id="accuracy-rate">0%</div>
-                            <div class="stat-label">Accuracy</div>
-                        </div>
-                    </div>
-                    <div style="display:flex; justify-content:center;">
-                        <button class="next-btn active" id="restart-btn">Try Again</button>
-                    </div>
-                </div>
+
+                <p class="sr-only" id="sr-status" role="status" aria-live="polite"></p>
+
+                <div id="screen-root"></div>
             </div>
         `;
+
+        this.homeBtn = this.container.querySelector("#home-btn");
+        this.quizEyebrow = this.container.querySelector("#quiz-eyebrow");
+        this.themeToggle = this.container.querySelector("#theme-toggle");
+        this.errorBanner = this.container.querySelector("#error-banner");
+        this.errorText = this.container.querySelector("#error-text");
+        this.errorDismiss = this.container.querySelector("#error-dismiss");
+        this.srStatus = this.container.querySelector("#sr-status");
+        this.screenRoot = this.container.querySelector("#screen-root");
     }
 
-    bindElements() {
-        this.stepLabel = this.container.querySelector("#step-label");
-        this.dotsContainer = this.container.querySelector("#dots-container");
-        this.questionText = this.container.querySelector("#question-text");
-        this.optionsStack = this.container.querySelector("#options-stack");
-        this.rationaleCard = this.container.querySelector("#rationale-card");
-        this.rationaleText = this.container.querySelector("#rationale-text");
-        this.nextBtn = this.container.querySelector("#next-btn");
-        this.questionView = this.container.querySelector("#question-view");
-        this.resultsView = this.container.querySelector("#results-view");
-        this.restartBtn = this.container.querySelector("#restart-btn");
-        this.fileInput = this.container.querySelector("#json-file-input");
+    showError(message) {
+        this.errorText.textContent = message;
+        this.errorBanner.hidden = false;
+    }
 
-        this.nextBtn.addEventListener("click", () => this.handleNext());
-        this.restartBtn.addEventListener("click", () => this.restart());
+    hideError() {
+        this.errorBanner.hidden = true;
+    }
+
+    setEyebrow(text) {
+        this.quizEyebrow.textContent = text;
+        this.quizEyebrow.title = text;
+    }
+
+    /* ---------------- Screens ---------------- */
+
+    showHome({ focus = true } = {}) {
+        this.hideError();
+        this.setEyebrow(APP_NAME);
+        document.title = APP_NAME;
+
+        const els = renderHome(this.screenRoot, {
+            onUpload: (data) => this.loadQuiz(data),
+            onUploadError: (message) => this.showError(message),
+            onMakeQuestions: () => this.showBuilder(),
+            onExampleQuestions: () => this.loadQuiz(sampleQuizData)
+        });
+
+        if (focus) els.heading.focus();
+    }
+
+    showBuilder() {
+        this.hideError();
+        this.setEyebrow("New quiz");
+        document.title = `New quiz · ${APP_NAME}`;
+
+        const els = renderBuilder(this.screenRoot, {
+            onStartQuiz: (data) => this.loadQuiz(data),
+            onError: (message) => this.showError(message)
+        });
+
+        els.heading.focus();
     }
 
     loadQuiz(data) {
         this.state.title = data.title || "Assessment";
         this.state.questions = data.questions;
-        this.restart();
+        this.state.reset();
+        this.hideError();
+        this.setEyebrow(this.state.title);
+        document.title = `${this.state.title} · ${APP_NAME}`;
+        this.quizEls = renderQuizView(this.screenRoot);
+        this.displayCurrentQuestion();
     }
 
     displayCurrentQuestion() {
         this.state.answered = false;
+        const els = this.quizEls;
         const q = this.state.questions[this.state.currentIdx];
+        const total = this.state.questions.length;
+        const isLast = this.state.currentIdx === total - 1;
 
-        renderQuestion(this.stepLabel, this.questionText, q, this.state.currentIdx, this.state.questions.length);
-        renderDots(this.dotsContainer, this.state.questions.length, this.state.currentIdx);
-        hideRationale(this.rationaleCard);
-        toggleNextButton(this.nextBtn, false);
+        renderQuestion(els.questionText, q);
+        renderProgress(els.progressFill, els.progressLabel, total, this.state.currentIdx);
+        hideRationale(els.rationaleCard);
+        this.srStatus.textContent = "";
 
-        renderOptions(this.optionsStack, q, (selectedIdx, correctIdx) => {
+        els.nextBtn.textContent = "Skip";
+        els.nextBtn.dataset.mode = "skip";
+
+        renderOptions(els.optionsStack, q, (selectedIdx, correctIdx) => {
             if (this.state.answered) return;
-            this.state.recordAnswer(selectedIdx === correctIdx);
-            applyOptionStyles(this.optionsStack, selectedIdx, correctIdx);
-            showRationale(this.rationaleCard, this.rationaleText, q.rationale);
-            toggleNextButton(this.nextBtn, true);
+            const isCorrect = this.state.recordAnswer(q, selectedIdx, correctIdx);
+            applyOptionStyles(els.optionsStack, selectedIdx, correctIdx);
+            showRationale(els.rationaleCard, els.rationaleText, q.rationale);
+            els.nextBtn.textContent = isLast ? "Finish" : "Continue";
+            els.nextBtn.dataset.mode = "advance";
+            this.srStatus.textContent = isCorrect
+                ? "Correct."
+                : `Incorrect. The correct answer is: ${q.options[correctIdx]}`;
         });
+
+        els.nextBtn.onclick = () => {
+            if (els.nextBtn.dataset.mode === "skip") {
+                this.state.recordSkip(q);
+            }
+            this.advance();
+        };
+
+        els.questionText.focus();
     }
 
-    handleNext() {
+    advance() {
         if (this.state.currentIdx < this.state.questions.length - 1) {
             this.state.currentIdx++;
             this.displayCurrentQuestion();
@@ -118,16 +169,31 @@ export class MCQEngine {
     }
 
     showResultsScreen() {
-        this.questionView.style.display = "none";
-        this.resultsView.style.display = "block";
-        this.stepLabel.textContent = "Summary";
-        renderResults(this.resultsView, this.state);
+        this.hideError();
+        this.setEyebrow("Results");
+        document.title = `Results · ${this.state.title}`;
+
+        const els = renderResultsView(this.screenRoot);
+        renderResults(this.screenRoot, this.state);
+
+        els.restartBtn.addEventListener("click", () => {
+            this.loadQuiz({ title: this.state.title, questions: this.state.questions });
+        });
+        els.exportBtn.addEventListener("click", () => downloadResults(this.state));
+        els.reviewBtn.addEventListener("click", () => this.showReviewScreen());
+
+        els.resultsTitle.focus();
     }
 
-    restart() {
-        this.state.reset();
-        this.resultsView.style.display = "none";
-        this.questionView.style.display = "block";
-        this.displayCurrentQuestion();
+    showReviewScreen() {
+        this.hideError();
+        this.setEyebrow("Review");
+        document.title = `Review · ${this.state.title}`;
+
+        const els = renderReview(this.screenRoot, this.state, {
+            onBack: () => this.showResultsScreen()
+        });
+
+        els.heading.focus();
     }
 }

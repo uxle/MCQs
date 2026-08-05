@@ -1,8 +1,9 @@
 export function showRationale(cardEl, textEl, rationaleText) {
+    if (!rationaleText) return;
     textEl.textContent = rationaleText;
-    cardEl.classList.add("visible");
+    cardEl.hidden = false;
 }
 
 export function hideRationale(cardEl) {
-    cardEl.classList.remove("visible");
+    cardEl.hidden = true;
 }

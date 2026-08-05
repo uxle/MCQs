@@ -1,4 +1,3 @@
-export function renderQuestion(stepEl, textEl, questionObj, currentIdx, total) {
-    stepEl.textContent = `Question ${currentIdx + 1} of ${total}`;
+export function renderQuestion(textEl, questionObj) {
     textEl.textContent = questionObj.question;
 }
