@@ -1,0 +1,95 @@
+/* ============================================================
+   Responsive tiers — large phone / small phone / watch-class.
+   Each tier only overrides what needs to change; properties left
+   untouched cascade down from the wider tier above it.
+   ============================================================ */
+@media (max-width: 480px) {
+    body {
+        padding: 0.75rem;
+        padding-top: calc(0.75rem + env(safe-area-inset-top, 0px));
+        padding-right: calc(0.75rem + env(safe-area-inset-right, 0px));
+        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+        padding-left: calc(0.75rem + env(safe-area-inset-left, 0px));
+    }
+
+    .quiz-card { padding: 1.25rem; border-radius: 16px; }
+
+    .question-text { font-size: 1.05rem; }
+
+    .option-item { padding: 0.75rem 0.9rem; font-size: 0.85rem; }
+
+    .stat-value { font-size: 1.25rem; }
+
+    .upload-dropzone { padding: 1.75rem 1rem; }
+    .upload-dropzone i { font-size: 1.5rem; }
+
+    /* Keep tap targets comfortable even as visual padding shrinks further down */
+    .icon-btn, .action-btn, .icon-btn-sm { min-height: 44px; }
+    .icon-btn { width: 44px; height: 44px; }
+    .action-btn { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
+}
+
+@media (max-width: 360px) {
+    body {
+        padding: 0.5rem;
+        padding-top: calc(0.5rem + env(safe-area-inset-top, 0px));
+        padding-right: calc(0.5rem + env(safe-area-inset-right, 0px));
+        padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+        padding-left: calc(0.5rem + env(safe-area-inset-left, 0px));
+    }
+
+    .quiz-card { padding: 1rem; border-radius: 14px; }
+
+    .question-text { font-size: 0.98rem; }
+
+    .option-item { padding: 0.65rem 0.8rem; font-size: 0.8rem; }
+
+    .stats-grid { gap: 0.4rem; }
+    .stat-value { font-size: 1.1rem; }
+
+    .action-btn { padding: 0.45rem 0.6rem; font-size: 0.72rem; gap: 0.3rem; }
+
+    .upload-dropzone { padding: 1.4rem 0.85rem; }
+    .upload-title { font-size: 0.85rem; }
+    .upload-hint { font-size: 0.72rem; }
+
+    .builder-draft { padding: 0.75rem; }
+    .text-input { font-size: 0.82rem; padding: 0.55rem 0.7rem; }
+}
+
+/* Watch-class / ultra-narrow: collapse action-button labels to icon-only.
+   Accessible name is preserved via aria-label on the button itself. */
+@media (max-width: 240px) {
+    body {
+        padding: 0.35rem;
+        padding-top: calc(0.35rem + env(safe-area-inset-top, 0px));
+        padding-right: calc(0.35rem + env(safe-area-inset-right, 0px));
+        padding-bottom: calc(0.35rem + env(safe-area-inset-bottom, 0px));
+        padding-left: calc(0.35rem + env(safe-area-inset-left, 0px));
+    }
+
+    .quiz-card { padding: 0.65rem; border-radius: 12px; }
+
+    .question-text { font-size: 0.88rem; }
+
+    .option-item { padding: 0.55rem 0.65rem; font-size: 0.74rem; }
+
+    .stat-value { font-size: 0.95rem; }
+    .stat-label { font-size: 0.6rem; }
+
+    .upload-dropzone { padding: 1.1rem 0.6rem; }
+    .upload-dropzone i { font-size: 1.25rem; }
+
+    .action-btn { padding: 0.6rem; }
+    .action-btn span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+}

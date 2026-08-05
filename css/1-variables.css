@@ -1,0 +1,95 @@
+/* ============================================================
+   Tokens — light (default) and dark (explicit + system fallback)
+   ============================================================ */
+:root {
+    --bg: #eef0f4;
+    --surface: #ffffff;
+    --surface-alt: #f1f2f5;
+    --surface-alt-hover: #e6e8ec;
+    --border: rgba(20, 21, 26, 0.08);
+
+    --ink: #14151a;
+    --ink-soft: #6c7280;
+
+    --accent: #2f5fe0;
+    --accent-soft: rgba(47, 95, 224, 0.1);
+    --accent-soft-hover: rgba(47, 95, 224, 0.18);
+
+    --success: #1c8a4b;
+    --success-soft: rgba(28, 138, 75, 0.12);
+    --danger: #d6483a;
+    --danger-soft: rgba(214, 72, 58, 0.12);
+
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --radius-pill: 999px;
+
+    --shadow-card: 0 1px 2px rgba(16, 24, 32, 0.04), 0 12px 32px rgba(16, 24, 32, 0.06);
+
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --dur-fast: 140ms;
+    --dur-base: 220ms;
+
+    color-scheme: light;
+}
+
+/* Explicit user choice (set on <html data-theme="dark|light">) always wins */
+:root[data-theme="dark"] {
+    --bg: #0f1115;
+    --surface: #17191f;
+    --surface-alt: #1f222a;
+    --surface-alt-hover: #272a33;
+    --border: rgba(255, 255, 255, 0.08);
+
+    --ink: #f2f3f5;
+    --ink-soft: #9297a1;
+
+    --accent: #7f9bff;
+    --accent-soft: rgba(127, 155, 255, 0.16);
+    --accent-soft-hover: rgba(127, 155, 255, 0.24);
+
+    --success: #3ddc84;
+    --success-soft: rgba(61, 220, 132, 0.14);
+    --danger: #ff6b5e;
+    --danger-soft: rgba(255, 107, 94, 0.14);
+
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.4);
+
+    color-scheme: dark;
+}
+
+/* No-JS fallback: honor system preference only when JS never set a choice */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --bg: #0f1115;
+        --surface: #17191f;
+        --surface-alt: #1f222a;
+        --surface-alt-hover: #272a33;
+        --border: rgba(255, 255, 255, 0.08);
+
+        --ink: #f2f3f5;
+        --ink-soft: #9297a1;
+
+        --accent: #7f9bff;
+        --accent-soft: rgba(127, 155, 255, 0.16);
+        --accent-soft-hover: rgba(127, 155, 255, 0.24);
+
+        --success: #3ddc84;
+        --success-soft: rgba(61, 220, 132, 0.14);
+        --danger: #ff6b5e;
+        --danger-soft: rgba(255, 107, 94, 0.14);
+
+        --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.4);
+
+        color-scheme: dark;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

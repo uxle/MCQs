@@ -1,0 +1,431 @@
+/* ============================================================
+   Shared action buttons (Home actions + Upload/Sample, etc.)
+   ============================================================ */
+.action-btn {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+
+.action-btn:hover { background: var(--accent-soft-hover); }
+.action-btn:active { transform: scale(0.97); }
+.action-btn i { font-size: 0.85rem; flex-shrink: 0; }
+.action-btn span { min-width: 0; }
+
+.file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ============================================================
+   Home screen
+   ============================================================ */
+.home-upload { margin-bottom: 1.1rem; }
+
+.upload-dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    text-align: center;
+    padding: 2.25rem 1.25rem;
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface-alt);
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+.upload-dropzone:hover,
+.upload-dropzone.dragover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+}
+
+.upload-dropzone i { font-size: 1.8rem; color: var(--accent); }
+.upload-title { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+.upload-hint { font-size: 0.78rem; color: var(--ink-soft); }
+
+.home-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+/* ============================================================
+   Progress
+   ============================================================ */
+.progress {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.progress-track {
+    flex: 1;
+    height: 4px;
+    border-radius: var(--radius-pill);
+    background: var(--surface-alt);
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    border-radius: inherit;
+    transition: width var(--dur-base) var(--ease);
+}
+
+.progress-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   Question view
+   ============================================================ */
+.question-text {
+    font-size: 1.2rem;
+    font-weight: 650;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.25rem;
+    word-break: break-word;
+}
+
+.options-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.option-item {
+    all: unset;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    background: var(--surface-alt);
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1.1rem;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+        transform var(--dur-fast) var(--ease);
+}
+
+.option-item:hover:not(:disabled) { background: var(--surface-alt-hover); }
+.option-item:active:not(:disabled) { transform: scale(0.99); }
+.option-item:disabled { cursor: default; }
+
+.option-item.correct {
+    background: var(--success-soft);
+    border-color: var(--success);
+    color: var(--success);
+    animation: pop var(--dur-base) var(--ease);
+}
+
+.option-item.wrong {
+    background: var(--danger-soft);
+    border-color: var(--danger);
+    color: var(--danger);
+    animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.option-label { flex: 1; min-width: 0; word-break: break-word; }
+.option-badge { font-weight: 700; flex-shrink: 0; }
+
+.rationale-card {
+    margin-top: 1.1rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--accent-soft);
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--ink);
+}
+
+.rationale-card[hidden] { display: none; }
+
+.rationale-title {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.25rem;
+}
+
+.card-footer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-primary {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: var(--surface);
+    padding: 0.7rem 1.4rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-primary:hover:not(:disabled) { opacity: 0.85; }
+.btn-primary:active:not(:disabled) { transform: scale(0.97); }
+
+/* ============================================================
+   Results view
+   ============================================================ */
+.results-title { font-size: 1.3rem; font-weight: 700; margin: 0 0 0.25rem; }
+.results-subtitle { color: var(--ink-soft); font-size: 0.85rem; margin: 0 0 1.4rem; word-break: break-word; }
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.65rem;
+    margin-bottom: 0.75rem;
+}
+
+.stat-box {
+    background: var(--surface-alt);
+    padding: 0.9rem 0.5rem;
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+.stat-value { font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.stat-right { color: var(--success); }
+.stat-wrong { color: var(--danger); }
+.stat-total { color: var(--accent); }
+
+.stat-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-top: 0.2rem;
+}
+
+.skip-note {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    text-align: center;
+    margin: 0 0 1.25rem;
+}
+
+.perfect-note {
+    font-size: 0.85rem;
+    color: var(--success);
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 1.25rem;
+}
+
+.results-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+}
+
+/* ============================================================
+   Review screen — each missed question rendered as a real MCQ
+   card (reusing .question-text / .options-stack / .option-item),
+   not a wall of plain text.
+   ============================================================ */
+.review-index {
+    font-weight: 700;
+    color: var(--ink-soft);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.5rem;
+}
+
+.review-question-block {
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--border);
+}
+
+.review-question-block:first-child {
+    padding-top: 0;
+    border-top: none;
+}
+
+.review-question-block .question-text { margin-bottom: 0.85rem; }
+.review-question-block .rationale-card { margin-bottom: 0; }
+
+.review-skip-note {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin: 0.7rem 0 0;
+}
+
+/* ============================================================
+   Question builder ("Make questions")
+   ============================================================ */
+.field { display: block; margin-bottom: 0.85rem; }
+
+.field-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.35rem;
+}
+
+.text-input {
+    width: 100%;
+    background: var(--surface-alt);
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-md);
+    padding: 0.65rem 0.8rem;
+    font-size: 0.88rem;
+    font-family: inherit;
+    color: var(--ink);
+    transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.text-input:focus { border-color: var(--accent); background: var(--surface); outline: none; }
+textarea.text-input { resize: vertical; min-height: 3.2rem; }
+
+.builder-draft {
+    background: var(--surface-alt);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.draft-option-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.draft-option-radio {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.draft-option-input { flex: 1; min-width: 0; }
+
+.icon-btn-sm {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: var(--radius-pill);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.icon-btn-sm:hover { background: var(--surface-alt-hover); color: var(--danger); }
+
+.link-btn {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    padding: 0.3rem 0;
+    margin-bottom: 0.85rem;
+}
+
+.link-btn:hover { opacity: 0.75; }
+
+.builder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+}
+
+.builder-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    background: var(--surface-alt);
+    border-radius: var(--radius-md);
+    padding: 0.55rem 0.7rem;
+}
+
+.builder-item-text {
+    font-size: 0.82rem;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ============================================================
+   Motion
+   ============================================================ */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.015); }
+    100% { transform: scale(1); }
+}
