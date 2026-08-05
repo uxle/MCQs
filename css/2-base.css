@@ -1,35 +1,138 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-}
+/* ============================================================
+   Reset & page layout
+   ============================================================ */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 
-html, body {
-    width: 100%;
-    max-width: 100vw;
-    overflow-x: hidden;
+button, label {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background-color: var(--bg-body);
-    color: var(--text-main);
+    margin: 0;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Text", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
+
+    padding: 1.5rem 1rem;
+    padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
+    padding-right: calc(1rem + env(safe-area-inset-right, 0px));
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    padding-left: calc(1rem + env(safe-area-inset-left, 0px));
 }
 
-.mcq-container {
-    width: 100%;
-    max-width: 520px;
-    background: var(--bg-card);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: var(--radius-card);
-    padding: 1.75rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+button { font-family: inherit; }
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
 }
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ============================================================
+   App shell — persists across Home / Builder / Quiz / Results
+   ============================================================ */
+#mcq-app {
+    width: 100%;
+    max-width: 480px;
+}
+
+.quiz-card {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 1.75rem;
+    transition: background var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
+
+.quiz-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1.1rem;
+}
+
+.quiz-eyebrow {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.icon-btn {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: var(--radius-pill);
+    background: var(--surface-alt);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+        transform var(--dur-fast) var(--ease);
+}
+
+.icon-btn:hover { background: var(--surface-alt-hover); color: var(--ink); }
+.icon-btn:active { transform: scale(0.94); }
+.icon-btn i { font-size: 0.95rem; }
+
+.error-banner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    background: var(--danger-soft);
+    color: var(--danger);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 1.1rem;
+}
+
+.error-banner[hidden] { display: none; }
+
+.error-dismiss {
+    all: unset;
+    cursor: pointer;
+    color: var(--danger);
+    flex-shrink: 0;
+    display: inline-flex;
+}
+
+.error-dismiss i { font-size: 0.85rem; }
