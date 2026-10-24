@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#eef0f4">
+    <meta name="theme-color" content="#f5f4fb">
     <meta name="description" content="A lightweight multiple-choice quiz engine for any subject — upload your own JSON question set or try the built-in sample test.">
     <script>
         (function () {
@@ -15,15 +15,13 @@
                     : (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
                 document.documentElement.setAttribute('data-theme', theme);
                 var meta = document.querySelector('meta[name="theme-color"]');
-                if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f1115' : '#eef0f4');
+                if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b0a13' : '#f5f4fb');
             } catch (e) {}
         })();
     </script>
     <title>MCQ Practice</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%2710%27 fill=%27%235b45f0%27/%3E%3Cpath d=%27m9 17 5 5 9-11%27 fill=%27none%27 stroke=%27%23fff%27 stroke-width=%273%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E">
 
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/fontawesome.min.css" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/solid.min.css" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="css/1-variables.css">
     <link rel="stylesheet" href="css/2-base.css">
     <link rel="stylesheet" href="css/3-components.css">
@@ -31,22 +29,26 @@
 </head>
 <body>
     <div id="mcq-app"></div>
+    <noscript><p class="nojs">MCQ Practice needs JavaScript to run. Please enable it and reload.</p></noscript>
 
-    <script src="js/config.js"></script>
-    <script src="js/state.js"></script>
-    <script src="js/theme.js"></script>
-    <script src="js/uploader.js"></script>
-    <script src="js/progress.js"></script>
-    <script src="js/question.js"></script>
-    <script src="js/options.js"></script>
-    <script src="js/rationale.js"></script>
-    <script src="js/exporter.js"></script>
-    <script src="js/home.js"></script>
-    <script src="js/builder.js"></script>
-    <script src="js/quizview.js"></script>
-    <script src="js/results.js"></script>
-    <script src="js/review.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/icons.js" defer></script>
+    <script src="js/vendor/zolto.min.js" defer></script>
+    <script src="js/zolto.js" defer></script>
+    <script src="js/config.js" defer></script>
+    <script src="js/state.js" defer></script>
+    <script src="js/theme.js" defer></script>
+    <script src="js/uploader.js" defer></script>
+    <script src="js/progress.js" defer></script>
+    <script src="js/question.js" defer></script>
+    <script src="js/options.js" defer></script>
+    <script src="js/rationale.js" defer></script>
+    <script src="js/exporter.js" defer></script>
+    <script src="js/home.js" defer></script>
+    <script src="js/builder.js" defer></script>
+    <script src="js/quizview.js" defer></script>
+    <script src="js/results.js" defer></script>
+    <script src="js/review.js" defer></script>
+    <script src="js/main.js" defer></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             new window.MCQ.MCQEngine("mcq-app");
