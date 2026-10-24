@@ -1,138 +1,325 @@
 /* ============================================================
-   Reset & page layout
+   Reset, page, shell, shared controls, motion vocabulary
    ============================================================ */
 * { box-sizing: border-box; }
-html, body { height: 100%; }
 
-button, label {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-}
+/* Liquid root: 16px on phones, easing up to ~21px on very large displays,
+   so the whole rem-based UI scales proportionally with screen size and still
+   honours the user's own browser font-size setting. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; font-size: clamp(100%, 0.9rem + 0.35vw, 130%); }
+
+button, label, input, textarea { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button, input, textarea { font-family: inherit; }
+img, svg, video { max-width: 100%; }
 
 body {
     margin: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
-    align-items: center;
-    justify-content: center;
     background: var(--bg);
     color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Text", Helvetica, Arial, sans-serif;
+    font-family: var(--font-sans);
+    font-size: var(--fs-base);
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    transition: background var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
-
-    padding: 1.5rem 1rem;
-    padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
-    padding-right: calc(1rem + env(safe-area-inset-right, 0px));
-    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
-    padding-left: calc(1rem + env(safe-area-inset-left, 0px));
+    overflow-wrap: break-word;
+    transition: background var(--dur-slow) var(--ease-inout), color var(--dur-base) var(--ease-inout);
+    padding: var(--s-5) var(--s-4);
+    padding-top: calc(var(--s-5) + env(safe-area-inset-top, 0px));
+    padding-right: calc(var(--s-4) + env(safe-area-inset-right, 0px));
+    padding-bottom: calc(var(--s-5) + env(safe-area-inset-bottom, 0px));
+    padding-left: calc(var(--s-4) + env(safe-area-inset-left, 0px));
 }
 
-button { font-family: inherit; }
-
-:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-    border-radius: 4px;
+/* Ambient backdrop: soft colour pools + a faint dot grid for depth */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(60vmax 40vmax at 12% -8%, var(--glow-1), transparent 60%),
+        radial-gradient(50vmax 38vmax at 100% 105%, var(--glow-2), transparent 62%),
+        radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 1.4px) 0 0 / 24px 24px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, rgba(0, 0, 0, 0.55) 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 70%, rgba(0, 0, 0, 0.55) 100%);
 }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+/* Author display rules must never defeat the hidden attribute */
+[hidden] { display: none !important; }
 
 .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
+.icon { display: inline-block; flex-shrink: 0; vertical-align: -0.125em; }
+
+noscript .nojs { max-width: 32rem; margin: auto; padding: var(--s-5); text-align: center; color: var(--ink-soft); }
+
 /* ============================================================
-   App shell — persists across Home / Builder / Quiz / Results
+   App shell. #mcq-app is a size container: everything inside adapts to
+   ITS width (container queries), so it stays liquid even when embedded.
    ============================================================ */
 #mcq-app {
+    container: mcq / inline-size;
     width: 100%;
-    max-width: 480px;
+    max-width: 47.5rem;
+    margin: auto;
 }
 
 .quiz-card {
+    position: relative;
     width: 100%;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
-    padding: 1.75rem;
-    transition: background var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+    padding: var(--pad-card);
+    padding-top: calc(var(--pad-card) * 0.8);
+    transition: background var(--dur-slow) var(--ease-inout), border-color var(--dur-slow) var(--ease-inout), box-shadow var(--dur-slow) var(--ease-inout);
+    animation: card-in var(--dur-slow) var(--ease-out) both;
 }
 
+/* Header: brand left, controls right — a clear left-aligned reading line */
 .quiz-topline {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 1.1rem;
+    gap: var(--s-3);
+    margin-bottom: var(--s-5);
+    padding-bottom: var(--s-4);
+    border-bottom: 1px solid var(--border);
 }
 
+.brand { display: flex; align-items: center; gap: var(--s-3); min-width: 0; flex: 1; }
+.logo { flex-shrink: 0; border-radius: 10px; box-shadow: 0 4px 12px -2px var(--glow-1); }
+
 .quiz-eyebrow {
-    flex: 1;
+    margin: 0;
     min-width: 0;
-    text-align: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
+    font-size: var(--fs-base);
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--ink);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+.topline-actions { display: flex; align-items: center; gap: var(--s-2); }
+
 .icon-btn {
     all: unset;
     box-sizing: border-box;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
+    display: inline-grid;
+    place-items: center;
+    width: 2.5rem; height: 2.5rem;
     flex-shrink: 0;
     border-radius: var(--radius-pill);
-    background: var(--surface-alt);
+    background: transparent;
+    border: 1px solid var(--border);
     color: var(--ink-soft);
+    font-size: 1.1rem;
     cursor: pointer;
-    transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
-        transform var(--dur-fast) var(--ease);
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon-btn .icon { transition: transform var(--dur-slow) var(--ease-spring); }
+.icon-btn.spin .icon { animation: theme-swap var(--dur-slow) var(--ease-spring); }
 
-.icon-btn:hover { background: var(--surface-alt-hover); color: var(--ink); }
-.icon-btn:active { transform: scale(0.94); }
-.icon-btn i { font-size: 0.95rem; }
+/* Touch screens get 44px targets by capability, not by guessing from width */
+@media (pointer: coarse) {
+    .icon-btn { width: var(--tap); height: var(--tap); }
+}
 
 .error-banner {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 0.75rem;
+    gap: var(--s-3);
     background: var(--danger-soft);
     color: var(--danger);
+    border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
     border-radius: var(--radius-md);
-    padding: 0.65rem 0.85rem;
-    font-size: 0.8rem;
-    font-weight: 500;
-    line-height: 1.4;
-    margin-bottom: 1.1rem;
+    padding: var(--s-3) var(--s-4);
+    font-size: var(--fs-sm);
+    font-weight: 550;
+    margin-bottom: var(--s-4);
+    scroll-margin-top: var(--s-4);
+    animation: shake 420ms var(--ease-out) both, rise var(--dur-base) var(--ease-out) both;
 }
+.error-dismiss { all: unset; cursor: pointer; display: inline-grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 8px; flex-shrink: 0; margin: -0.25rem -0.4rem 0 0; }
+.error-dismiss:hover { background: var(--danger-soft); }
+.error-dismiss:focus-visible { outline: 2px solid var(--danger); }
+@media (pointer: coarse) { .error-dismiss { width: var(--tap); height: var(--tap); margin: -0.75rem -0.9rem -0.75rem 0; } }
 
-.error-banner[hidden] { display: none; }
-
-.error-dismiss {
+/* ============================================================
+   Buttons: one primary, one secondary, one text — a clear ranking.
+   Only ONE primary action per screen, so the eye always knows where to go.
+   ============================================================ */
+.btn-primary {
     all: unset;
-    cursor: pointer;
-    color: var(--danger);
-    flex-shrink: 0;
+    box-sizing: border-box;
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-height: 3rem;
+    padding: 0 var(--s-5);
+    border-radius: var(--radius-pill);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 88%, #fff) 0%, var(--accent) 100%);
+    color: var(--accent-ink);
+    font-weight: 650;
+    font-size: var(--fs-base);
+    letter-spacing: -0.005em;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-btn);
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), filter var(--dur-fast) var(--ease-out), background var(--dur-base) var(--ease-out);
+}
+.btn-primary .icon { transition: transform var(--dur-base) var(--ease-spring); }
+.btn-primary:active { transform: translateY(0) scale(0.97); filter: brightness(0.96); }
+.btn-primary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.btn-primary:disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; transform: none; filter: grayscale(0.4); }
+
+/* "Skip" is a lower-ranked action than "Continue": same shape, quieter fill */
+.btn-primary[data-mode="skip"] {
+    background: var(--surface-alt);
+    color: var(--ink-soft);
+    box-shadow: inset 0 0 0 1px var(--border-strong);
 }
 
-.error-dismiss i { font-size: 0.85rem; }
+.action-btn {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-height: var(--tap);
+    padding: 0 var(--s-4);
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--border-strong);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+.action-btn .icon { color: var(--accent); font-size: 1.3em; }
+.action-btn:active { transform: scale(0.97); }
+.action-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.link-btn {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: var(--tap);
+    padding: 0 var(--s-2);
+    margin-inline-start: calc(var(--s-2) * -1);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: color var(--dur-fast) var(--ease-out), gap var(--dur-base) var(--ease-out);
+}
+.link-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.link-btn:disabled { color: var(--ink-faint); cursor: not-allowed; }
+
+/* Hover is a mouse affordance. Touch devices keep it OFF so a tap never leaves
+   a "stuck" hover on the control now sitting under the finger. */
+@media (hover: hover) and (pointer: fine) {
+    .icon-btn:hover { background: var(--surface-alt); color: var(--ink); border-color: var(--border-strong); }
+    .btn-primary:not(:disabled):hover { transform: translateY(-1px); filter: brightness(1.06); }
+    .btn-primary:not(:disabled):hover .icon-arrow { transform: translateX(3px); }
+    .btn-primary[data-mode="skip"]:hover { background: var(--surface-alt-hover); color: var(--ink); filter: none; }
+    .action-btn:hover { background: var(--accent-soft); border-color: var(--accent); box-shadow: var(--shadow-raise); transform: translateY(-1px); }
+    .link-btn:not(:disabled):hover { gap: var(--s-3); filter: brightness(1.1); }
+}
+
+/* ============================================================
+   Modal dialog (leave-quiz confirmation) — native <dialog>
+   ============================================================ */
+.dialog {
+    width: min(26rem, calc(100vw - 2rem));
+    padding: var(--s-5);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: var(--shadow-card);
+}
+.dialog::backdrop { background: rgba(10, 8, 25, 0.55); backdrop-filter: blur(3px); }
+.dialog[open] { animation: card-in var(--dur-base) var(--ease-out) both; }
+.dialog h2 { margin: 0 0 var(--s-2); font-size: var(--fs-lg); letter-spacing: -0.01em; }
+.dialog p { margin: 0 0 var(--s-5); color: var(--ink-soft); font-size: var(--fs-sm); }
+.dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--s-3); }
+.dialog-actions .btn-primary { flex: 1 1 auto; }
+
+/* ============================================================
+   Motion vocabulary
+   - entrances ease-out, exits ease-in, confirmations spring
+   - durations: 140 (micro) / 240 (UI) / 420 (scene)
+   ============================================================ */
+@keyframes card-in { from { opacity: 0; transform: translateY(16px) scale(0.985); } to { opacity: 1; transform: none; } }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes slide-in { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes slide-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(-20px); } }
+@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.025); } 100% { transform: scale(1); } }
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    18% { transform: translateX(-7px); } 36% { transform: translateX(6px); }
+    54% { transform: translateX(-4px); } 72% { transform: translateX(3px); } 90% { transform: translateX(-1px); }
+}
+@keyframes ring-out { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 45%, transparent); } to { box-shadow: 0 0 0 14px transparent; } }
+@keyframes theme-swap { 0% { transform: rotate(-90deg) scale(0.4); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes draw { from { stroke-dashoffset: 28; } to { stroke-dashoffset: 0; } }
+@keyframes badge-in { from { transform: scale(0.3) rotate(-20deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes confetti-fall {
+    0% { transform: translate3d(0, -20px, 0) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translate3d(var(--dx), 340px, 0) rotate(var(--rot)); opacity: 0; }
+}
+
+.screen-enter { animation: rise var(--dur-slow) var(--ease-out) both; }
+.q-leave { animation: slide-out 150ms var(--ease-in) both; pointer-events: none; }
+.stagger > * { animation: rise var(--dur-slow) var(--ease-out) both; animation-delay: calc(var(--i, 0) * 55ms + 40ms); }
+.no-anim, .no-anim * { animation: none !important; }
+
+/* ============================================================
+   Phones: the card dissolves into the screen (full-bleed) to reclaim
+   every pixel of width, and the page background is the card's own.
+   ============================================================ */
+@media (max-width: 36rem) {
+    body { padding: 0; background: var(--surface); align-items: stretch; }
+    body::before { display: none; }
+    #mcq-app { max-width: none; margin: 0; display: flex; }
+    .quiz-card {
+        min-height: 100vh; min-height: 100dvh;
+        border: 0; border-radius: 0; box-shadow: none; animation: none;
+        padding-top: calc(var(--s-3) + env(safe-area-inset-top, 0px));
+        padding-right: calc(var(--pad-card) + env(safe-area-inset-right, 0px));
+        padding-bottom: calc(var(--s-4) + env(safe-area-inset-bottom, 0px));
+        padding-left: calc(var(--pad-card) + env(safe-area-inset-left, 0px));
+        background-image: radial-gradient(110% 38% at 0% 0%, var(--glow-1), transparent 70%);
+        background-repeat: no-repeat;
+    }
+}
+
+/* Every screen is one flex column so its action footer can sit at the bottom
+   of a short screen (thumb zone) while still flowing naturally on tall ones. */
+#screen-root { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.screen { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.quiz-card { display: flex; flex-direction: column; }

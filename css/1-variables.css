@@ -1,93 +1,148 @@
 /* ============================================================
-   Tokens — light (default) and dark (explicit + system fallback)
+   Design tokens
+   Principles: 8-pt spacing grid, modular type scale, one accent hue
+   (violet) + one cool counter-accent (cyan), semantic state colours,
+   tinted neutrals (never pure grey/black), elevation by shadow+border.
    ============================================================ */
 :root {
-    --bg: #eef0f4;
+    /* Colour — light */
+    --bg: #f5f4fb;
     --surface: #ffffff;
-    --surface-alt: #f1f2f5;
-    --surface-alt-hover: #e6e8ec;
-    --border: rgba(20, 21, 26, 0.08);
+    --surface-alt: #f3f1fa;
+    --surface-alt-hover: #eae7f6;
+    --border: rgba(40, 30, 100, 0.10);
+    --border-strong: rgba(40, 30, 100, 0.20);
 
-    --ink: #14151a;
-    --ink-soft: #6c7280;
+    --ink: #17142b;
+    --ink-soft: #5d5977;
+    --ink-faint: #6b6784;
 
-    --accent: #2f5fe0;
-    --accent-soft: rgba(47, 95, 224, 0.1);
-    --accent-soft-hover: rgba(47, 95, 224, 0.18);
+    --accent: #5b45f0;
+    --accent-2: #0fb5d3;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(91, 69, 240, 0.09);
+    --accent-soft-hover: rgba(91, 69, 240, 0.16);
 
-    --success: #1c8a4b;
-    --success-soft: rgba(28, 138, 75, 0.12);
-    --danger: #d6483a;
-    --danger-soft: rgba(214, 72, 58, 0.12);
+    --success: #0f7a55;
+    --success-soft: rgba(15, 122, 85, 0.11);
+    --danger: #c5362d;
+    --danger-soft: rgba(197, 54, 45, 0.10);
+    --warn: #a15c07;
+    --on-success: #ffffff;
+    --on-danger: #ffffff;
 
-    --radius-lg: 20px;
-    --radius-md: 12px;
+    --glow-1: rgba(91, 69, 240, 0.20);
+    --glow-2: rgba(15, 181, 211, 0.16);
+
+    /* Fluid scale. cqi = 1% of the app container's width, so type and space
+       follow the component (not the window) and stay proportional anywhere. */
+    --pad-card: clamp(1rem, 0.45rem + 3.4cqi, 2.25rem);
+    --key: 1.875rem;            /* option letter tile */
+    --tap: 2.75rem;             /* minimum comfortable touch target (44px) */
+    --measure: 68ch;            /* readable line length */
+
+    /* Space (8-pt) */
+    --s-1: 0.25rem;
+    --s-2: 0.5rem;
+    --s-3: 0.75rem;
+    --s-4: 1rem;
+    --s-5: 1.5rem;
+    --s-6: 2rem;
+    --s-7: 3rem;
+
+    /* Shape */
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 24px;
     --radius-pill: 999px;
 
-    --shadow-card: 0 1px 2px rgba(16, 24, 32, 0.04), 0 12px 32px rgba(16, 24, 32, 0.06);
+    /* Type */
+    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI Variable Text", "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.875rem;
+    --fs-base: 1rem;
+    --fs-lg: 1.125rem;
+    --fs-xl: clamp(1.2rem, 0.95rem + 1.33cqi, 1.65rem);
+    --fs-2xl: clamp(1.75rem, 1.2rem + 3.6cqi, 2.75rem);
 
-    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Elevation */
+    --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 1px 2px rgba(30, 20, 90, 0.06), 0 24px 56px -12px rgba(50, 35, 140, 0.18);
+    --shadow-raise: 0 1px 2px rgba(30, 20, 90, 0.08), 0 8px 20px -6px rgba(50, 35, 140, 0.22);
+    --shadow-btn: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 6px 16px -4px rgba(91, 69, 240, 0.55);
+
+    /* Motion */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);      /* entrances: fast start, soft landing */
+    --ease-in: cubic-bezier(0.5, 0, 0.75, 0);        /* exits */
+    --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* overshoot for confirmations */
     --dur-fast: 140ms;
-    --dur-base: 220ms;
+    --dur-base: 240ms;
+    --dur-slow: 420ms;
 
     color-scheme: light;
 }
 
-/* Explicit user choice (set on <html data-theme="dark|light">) always wins */
 :root[data-theme="dark"] {
-    --bg: #0f1115;
-    --surface: #17191f;
-    --surface-alt: #1f222a;
-    --surface-alt-hover: #272a33;
-    --border: rgba(255, 255, 255, 0.08);
+    --bg: #0b0a13;
+    --surface: #14121f;
+    --surface-alt: #1c1a2c;
+    --surface-alt-hover: #25223a;
+    --border: rgba(200, 195, 255, 0.10);
+    --border-strong: rgba(200, 195, 255, 0.22);
 
-    --ink: #f2f3f5;
-    --ink-soft: #9297a1;
+    --ink: #f1effc;
+    --ink-soft: #aaa6c4;
+    --ink-faint: #8f8bab;
 
-    --accent: #7f9bff;
-    --accent-soft: rgba(127, 155, 255, 0.16);
-    --accent-soft-hover: rgba(127, 155, 255, 0.24);
+    --accent: #9b8bff;
+    --accent-2: #3bd0ea;
+    --accent-ink: #120d3a;
+    --accent-soft: rgba(155, 139, 255, 0.14);
+    --accent-soft-hover: rgba(155, 139, 255, 0.23);
 
-    --success: #3ddc84;
-    --success-soft: rgba(61, 220, 132, 0.14);
-    --danger: #ff6b5e;
-    --danger-soft: rgba(255, 107, 94, 0.14);
+    --success: #4be0a0;
+    --success-soft: rgba(75, 224, 160, 0.13);
+    --danger: #ff8073;
+    --danger-soft: rgba(255, 128, 115, 0.13);
+    --warn: #f2b559;
+    --on-success: #04241a;
+    --on-danger: #3a0a06;
 
-    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.4);
+    --glow-1: rgba(120, 95, 255, 0.28);
+    --glow-2: rgba(30, 190, 225, 0.16);
+
+    --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 1px 2px rgba(0, 0, 0, 0.4), 0 28px 64px -16px rgba(0, 0, 0, 0.65);
+    --shadow-raise: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 24px -8px rgba(0, 0, 0, 0.6);
+    --shadow-btn: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 6px 18px -4px rgba(155, 139, 255, 0.45);
 
     color-scheme: dark;
 }
 
-/* No-JS fallback: honor system preference only when JS never set a choice */
+/* Respect system preference until the person makes an explicit choice */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
-        --bg: #0f1115;
-        --surface: #17191f;
-        --surface-alt: #1f222a;
-        --surface-alt-hover: #272a33;
-        --border: rgba(255, 255, 255, 0.08);
-
-        --ink: #f2f3f5;
-        --ink-soft: #9297a1;
-
-        --accent: #7f9bff;
-        --accent-soft: rgba(127, 155, 255, 0.16);
-        --accent-soft-hover: rgba(127, 155, 255, 0.24);
-
-        --success: #3ddc84;
-        --success-soft: rgba(61, 220, 132, 0.14);
-        --danger: #ff6b5e;
-        --danger-soft: rgba(255, 107, 94, 0.14);
-
-        --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.4);
-
+        --bg: #0b0a13; --surface: #14121f; --surface-alt: #1c1a2c; --surface-alt-hover: #25223a;
+        --border: rgba(200, 195, 255, 0.10); --border-strong: rgba(200, 195, 255, 0.22);
+        --ink: #f1effc; --ink-soft: #aaa6c4; --ink-faint: #8f8bab;
+        --accent: #9b8bff; --accent-2: #3bd0ea; --accent-ink: #120d3a;
+        --accent-soft: rgba(155, 139, 255, 0.14); --accent-soft-hover: rgba(155, 139, 255, 0.23);
+        --success: #4be0a0; --success-soft: rgba(75, 224, 160, 0.13);
+        --danger: #ff8073; --danger-soft: rgba(255, 128, 115, 0.13); --warn: #f2b559;
+        --on-success: #04241a; --on-danger: #3a0a06;
+        --glow-1: rgba(120, 95, 255, 0.28); --glow-2: rgba(30, 190, 225, 0.16);
+        --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 1px 2px rgba(0, 0, 0, 0.4), 0 28px 64px -16px rgba(0, 0, 0, 0.65);
+        --shadow-raise: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 24px -8px rgba(0, 0, 0, 0.6);
+        --shadow-btn: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 6px 18px -4px rgba(155, 139, 255, 0.45);
         color-scheme: dark;
     }
 }
 
+/* Motion is never required to understand the UI */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
