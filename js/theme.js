@@ -3,14 +3,16 @@
         return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
     }
 
-    function applyThemeUI(toggleBtn, theme) {
-        const icon = toggleBtn.querySelector("i");
-        if (theme === "dark") {
-            icon.className = "fa-solid fa-sun";
-            toggleBtn.setAttribute("aria-label", "Switch to light mode");
-        } else {
-            icon.className = "fa-solid fa-moon";
-            toggleBtn.setAttribute("aria-label", "Switch to dark mode");
+    function applyThemeUI(toggleBtn, theme, animate) {
+        const next = theme === "dark" ? "light" : "dark";
+        toggleBtn.innerHTML = window.MCQ.icon(theme === "dark" ? "sun" : "moon");
+        toggleBtn.setAttribute("aria-label", `Switch to ${next} mode`);
+        toggleBtn.title = `Switch to ${next} mode`;
+
+        if (animate) {
+            toggleBtn.classList.remove("spin");
+            void toggleBtn.offsetWidth;
+            toggleBtn.classList.add("spin");
         }
 
         const meta = document.querySelector('meta[name="theme-color"]');
@@ -21,7 +23,7 @@
     }
 
     function initTheme(toggleBtn) {
-        applyThemeUI(toggleBtn, currentTheme());
+        applyThemeUI(toggleBtn, currentTheme(), false);
 
         toggleBtn.addEventListener("click", () => {
             const next = currentTheme() === "dark" ? "light" : "dark";
@@ -33,7 +35,8 @@
                 /* localStorage unavailable — theme still applies for this session */
             }
 
-            applyThemeUI(toggleBtn, next);
+            applyThemeUI(toggleBtn, next, true);
+            window.dispatchEvent(new Event("mcq:theme"));
         });
     }
 

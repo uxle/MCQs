@@ -1,6 +1,6 @@
 (function () {
     function renderQuestion(textEl, questionObj) {
-        textEl.textContent = questionObj.question;
+        window.MCQ.renderZolto(textEl, questionObj.question);
     }
 
     window.MCQ = window.MCQ || {};

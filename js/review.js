@@ -1,12 +1,14 @@
 (function () {
 function renderReview(rootEl, state, { onBack }) {
     rootEl.innerHTML = `
+        <div class="screen">
         <button type="button" class="link-btn" id="review-back-btn">
-            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to results
+            ${window.MCQ.icon("back")} Back to results
         </button>
         <h1 class="results-title" id="review-heading" tabindex="-1">Review your answers</h1>
         <p class="results-subtitle" id="review-subtitle"></p>
         <div id="review-list"></div>
+        </div>
     `;
 
     const heading = rootEl.querySelector("#review-heading");
@@ -26,17 +28,27 @@ function renderReview(rootEl, state, { onBack }) {
 
     subtitle.textContent = `${missedEntries.length} question${missedEntries.length === 1 ? "" : "s"} to review`;
 
-    missedEntries.forEach(({ q, response, number }) => {
+    if (missedEntries.length === 0) {
+        const none = document.createElement("p");
+        none.className = "results-subtitle";
+        none.textContent = "Nothing to review. Every answer was correct.";
+        list.appendChild(none);
+    }
+
+    missedEntries.forEach(({ q, response, number }, blockIdx) => {
         const block = document.createElement("div");
         block.className = "review-question-block";
+        block.style.setProperty("--i", String(Math.min(blockIdx, 8)));
 
         const label = document.createElement("p");
         label.className = "review-index";
-        label.textContent = `Question ${number}`;
+        label.textContent = response.skipped ? `Question ${number} · skipped` : `Question ${number} · missed`;
 
-        const questionText = document.createElement("p");
+        const questionText = document.createElement("div");
         questionText.className = "question-text";
-        questionText.textContent = q.question;
+        window.MCQ.renderZolto(questionText, q.question);
+        const lc = window.MCQ.lengthClass(q.question);
+        if (lc) questionText.classList.add(lc);
 
         const optionsStack = document.createElement("div");
         optionsStack.className = "options-stack";
@@ -44,6 +56,7 @@ function renderReview(rootEl, state, { onBack }) {
         block.append(label, questionText, optionsStack);
 
         window.MCQ.renderOptions(optionsStack, q, () => {});
+        optionsStack.classList.remove("stagger");
         window.MCQ.applyOptionStyles(optionsStack, response.selectedIdx, response.correctIdx);
 
         if (response.skipped) {
@@ -58,9 +71,10 @@ function renderReview(rootEl, state, { onBack }) {
             rationale.className = "rationale-card";
             const title = document.createElement("p");
             title.className = "rationale-title";
-            title.textContent = "Why";
-            const text = document.createElement("p");
-            text.textContent = q.rationale;
+            title.innerHTML = window.MCQ.icon("bulb") + "<span>Why</span>";
+            const text = document.createElement("div");
+            text.className = "rationale-text";
+            window.MCQ.renderZolto(text, q.rationale);
             rationale.append(title, text);
             block.appendChild(rationale);
         }
